@@ -60,6 +60,8 @@ public class User {
 
   public void addPost( String message ) {
     // TODO implement
+    Post post = null;
+    writePostToUserFile( post );
   }
 
   public void addPost( String message, int authorId ) {
@@ -84,5 +86,9 @@ public class User {
   public static void main(String[] args) {
     User user = new User(1, "Jrob", "Roberts", new Date(1977, 8, 5), 'M');
     System.out.println( user );
+  }
+
+  private void writePostToUserFile( Post post ) {
+    // TODO: Jrob will implement, it's magic
   }
 }
