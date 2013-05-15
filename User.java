@@ -1,8 +1,22 @@
 public class User {
   private int id;
+  private String firstName;
+  private String lastName;
+  private Date dob;
+  private char gender;
+  private String location;
+  private String profession;
+  private Post[] posts;
 
   public User() {
     this.id = 0;
+    this.firstName = "Unknown";
+    this.lastName = "Unknown";
+    this.dob = null;
+    this.gender = '?';
+    this.location = "Unknown";
+    this.profession = "Unknown";
+    this.posts = null;
   }
 
   public User(int id) {
