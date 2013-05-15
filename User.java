@@ -1,4 +1,6 @@
 import java.util.Date;
+import java.io.File;
+import java.io.FileWriter;
 
 public class User {
   private int id;
@@ -60,7 +62,7 @@ public class User {
 
   public void addPost( String message ) {
     // TODO implement
-    Post post = null;
+    Post post = new Post(message);
     writePostToUserFile( post );
   }
 
@@ -77,18 +79,50 @@ public class User {
   public String toString() {
     StringBuffer buffer = new StringBuffer();
 
-    buffer.append( "User ID: " + this.id + "\n" );
-    buffer.append( "Name: " + this.firstName + " " + this.lastName );
-    // TODO implement unless I'm nice and I do it
+    buffer.append( String.format( "[%d] %s %s - %s\n", this.id, this.firstName, this.lastName, this.gender ) );
+    buffer.append( String.format( "%d years old (Born %s)\n", this.age(), this.dob.toString() ));
+    buffer.append( String.format( "%s in %s\n", this.profession, this.location ) );
+    for( int i = 0; posts != null && i < posts.length; i++ )
+      buffer.append( this.posts[i].toString() + "\n" );
+    buffer.append("\n");
+
     return buffer.toString();
   }
 
   public static void main(String[] args) {
-    User user = new User(1, "Jrob", "Roberts", new Date(1977, 8, 5), 'M');
+    User user = new User(1, "Jrob", "Roberts", new Date(1977, 7, 5), 'M');
+    System.out.println( user );
+
+    user.addPost( "Testing the post save thingie." );
+    user.addPost( "Another test..." );
     System.out.println( user );
   }
 
   private void writePostToUserFile( Post post ) {
-    // TODO: Jrob will implement, it's magic
+    // Check that we have valid input
+    File file = new File( String.format( "users/%d.user", this.getId() ) );
+    if( post == null || ! file.exists() )
+      return;
+
+    // This would normally be automatically handled by DB...
+    post.setId( posts == null ? 0 : posts.length );
+
+    try {
+      FileWriter writer = new FileWriter( file, true );
+      writer.append( post.serialize() );
+      writer.flush();
+      writer.close();
+    } catch( Exception ex ) {
+      System.out.println( "Failed to store post. " );
+      ex.printStackTrace();
+    }
+
+    // Update the current user object, you're welcome
+    Post[] tempPosts = new Post[ posts == null ? 1 : posts.length + 1 ];
+    if( posts != null )
+      System.arraycopy( posts, 0, tempPosts, 0, posts.length );
+
+    posts = tempPosts;
+    posts[ posts.length - 1 ] = post;
   }
 }
